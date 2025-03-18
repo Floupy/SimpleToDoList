@@ -44,14 +44,14 @@ public class Event {
     @Override
     public String toString() {
         StringBuilder returnedString = new StringBuilder();
-        returnedString.append("Title: " + title);
+        returnedString.append("Title: " + title + "\n");
 
         if(!category.isEmpty()) {
-            returnedString.append("Category: " + category);
+            returnedString.append("Category: " + category + "\n");
         }
 
         if(!description.isEmpty()) {
-            returnedString.append("Description: " + description);
+            returnedString.append("Description: " + description + "\n");
         }
         if(isComplete) {
             returnedString.append("Status: Completed");

@@ -66,12 +66,13 @@ public class ToDoList {
 
     public void printAllEvents() {
         if(eventList.isEmpty()) {
-            System.out.println("There are no events.");
+            System.out.println("\nThere are no events.");
             return;
         }
 
         int index = 1;
 
+        System.out.println("\nAdded events:");
         for(Event event: eventList) {
             System.out.print(index + ") ");
             System.out.println(event);
@@ -81,12 +82,13 @@ public class ToDoList {
 
     public void printCompletedEvents() {
         if(completedEvents.isEmpty()) {
-            System.out.println("There are no completed events.");
+            System.out.println("\nThere are no completed events.");
             return;
         }
 
         int index = 1;
 
+        System.out.println("\nCompleted events:");
         for(Event completedEvent: completedEvents) {
             System.out.println(index + ") ");
             System.out.println(completedEvent);
@@ -106,6 +108,10 @@ public class ToDoList {
             System.out.println(index + ") " + category);
             index++;
         }
+    }
+
+    public boolean containsEvent(Event event) {
+        return false;
     }
 
     private static String sanitizeString(String stringToSanitize) {
