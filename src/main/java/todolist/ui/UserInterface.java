@@ -1,3 +1,5 @@
+//#TODO: Implement exception handling where needed and error handling
+
 package todolist.ui;
 
 import todolist.domain.Event;
@@ -21,15 +23,18 @@ public class UserInterface {
     public void printCommands() {
 
         while(true) {
-            System.out.println(" /_____________________________\\");
-            System.out.println("/|       Your To-Do List       |\\");
+            System.out.println("_________________________________ ");
+            System.out.println("||       Your To-Do List       ||");
+            System.out.println("||                             ||");
             System.out.println("|| 1)Add event to list.        ||");
             System.out.println("|| 2)Delete event from list.   ||");
             System.out.println("|| 3)Complete event            ||");
             System.out.println("|| 4)Show all events           ||");
             System.out.println("|| 5)Show all completed events ||");
+            System.out.println("|| 6)Show all incomplete events||");
             System.out.println();
             System.out.println("What would you like to do?(number)");
+            System.out.print("> ");
             int command = -1; //impossible value
             try {
                  command = Integer.parseInt(scanner.nextLine());
@@ -54,7 +59,9 @@ public class UserInterface {
             printAllEvents();
         } else if(command == 5) {
             printAllCompletedEvents();
-        } else {
+        } else if(command == 6){
+            printIncompleteEvents();
+        }else {
             System.out.println("Invalid command!");
         }
     }
@@ -87,6 +94,7 @@ public class UserInterface {
 
     public void deleteEvent() {
         if(toDoList.getEventList().isEmpty()) {
+            System.out.println("There are no events.");
             return;
         }
         while(true) {
@@ -103,7 +111,7 @@ public class UserInterface {
                 return;
             }
 
-            if(deletedEvent < 0 || deletedEvent > toDoList.getEventList().size()) {
+            if(deletedEvent < 1 || deletedEvent > toDoList.getEventList().size()) {
                 System.out.println("Invalid event number! Enter a valid event number!");
                 continue;
             }
@@ -115,6 +123,31 @@ public class UserInterface {
     }
 
     public void completeEvent() {
+        if(!toDoList.incompleteEventExists()) {
+            System.out.println("There are no incomplete events.");
+            return;
+        }
+        printIncompleteEvents();
+        System.out.println("Which event would you like to complete?(number)");
+        while (true) {
+            System.out.print("> ");
+            int eventNumber;
+            try{
+                eventNumber = Integer.valueOf(scanner.nextLine());
+            } catch (Exception e) {
+                System.out.println("Invalid input! Please enter a number");
+                continue;
+            }
+            if(eventNumber < 1 || eventNumber > toDoList.getIncompleteEventList().size()) {
+                System.out.println("Invalid event number! Enter a valid event number");
+                continue;
+            }
+            //Event eventToComplete = toDoList.getEventList().get(toDoList.getEventList().size() - (eventNumber - 1));
+            Event eventToComplete = toDoList.getIncompleteEventList().get(eventNumber - 1);
+            System.out.println("Event \"" + eventToComplete.getTitle() + "\" has been completed!");
+            toDoList.completeEvent(eventToComplete);
+            break;
+        }
 
     }
     public void printAllEvents() {
@@ -123,6 +156,10 @@ public class UserInterface {
 
     public void printAllCompletedEvents() {
         this.toDoList.printCompletedEvents();
+    }
+
+    public void printIncompleteEvents() {
+        this.toDoList.printIncompleteEvents();
     }
 
     private static String sanitizeString(String stringToSanitize) {
