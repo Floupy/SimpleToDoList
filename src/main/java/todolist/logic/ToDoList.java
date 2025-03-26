@@ -4,17 +4,14 @@ package todolist.logic;
 import todolist.domain.Event;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ToDoList {
     private List<Event> eventList;
     private List<Event> completedEventList;
     private List<Event> incompleteEventList;
     private List<String> eventCategories;
-//    private Map<String, List<Event>> eventsByCategory; // category -- events #TODO: implement somehow
 
 
     public ToDoList() {
@@ -22,7 +19,6 @@ public class ToDoList {
         this.completedEventList = new ArrayList<>();
         this.incompleteEventList = new ArrayList<>();
         this.eventCategories = new ArrayList<>();
-//        this.eventsByCategory = new HashMap<>();
     }
 
     public void addEvent(Event eventToAdd) {
@@ -33,10 +29,6 @@ public class ToDoList {
         if(!eventCategories.contains(eventCategory)) {
             eventCategories.add(eventCategory);
         }
-
-//        if(eventsByCategory.containsKey(eventCategory)) {
-//            eventsByCategory
-//        }
     }
 
     public void deleteEvent(Event eventToDelete) {
@@ -48,6 +40,9 @@ public class ToDoList {
         }
         if(completedEventList.contains(eventToDelete)) {
             completedEventList.remove(eventToDelete);
+        }
+        if(!moreThanOneWithCategory(eventToDelete.getCategory())) {
+            deleteCategory(eventToDelete.getCategory());
         }
     }
 
@@ -76,8 +71,6 @@ public class ToDoList {
     public List<String> getEventCategories() {
         return eventCategories;
     }
-
-
 
     public void printAllEvents() {
         if(eventList.isEmpty()) {
@@ -120,7 +113,7 @@ public class ToDoList {
 
         System.out.println("\nCompleted events:");
         for(Event completedEvent: completedEventList) {
-            System.out.println(index + ") ");
+            System.out.print(index + ") ");
             System.out.println(completedEvent);
             index++;
         }
@@ -140,17 +133,41 @@ public class ToDoList {
         }
     }
 
-    public boolean containsEvent(Event event) {
-        return false;
+    public void filterEventsByCategory(String category) {
+        System.out.println("\nEvents in \"" + category + "\" category: \n");
+        eventList.stream().filter(event -> event.getCategory().equals(category)).forEach(System.out::println);
     }
 
+    //#TODO: potentially implement in the database version of this app
+//    public void editEvent(Event eventToEdit, String newTitle, String newCategory, String newDescription) {
+//        eventToEdit.setTitle(newTitle.trim());
+//        eventToEdit.setCategory(sanitizeString(newCategory));
+//        eventToEdit.setDescription(newDescription);
+//    }
+
+
+    private boolean eventWithCategoryExists(String category) {
+        return eventList.stream().anyMatch(event -> event.getCategory().equals(category));
+    }
+
+    public boolean moreThanOneWithCategory(String category) {
+        int count = 0;
+
+        for(Event event: eventList) {
+            if (event.getCategory().equals(category)) {
+                count++;
+            }
+        }
+
+        return count > 1;
+    }
 
     public boolean incompleteEventExists() {
-        if(incompleteEventList.isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
+        return !incompleteEventList.isEmpty();
+    }
+
+    private void deleteCategory(String category) {
+        this.eventCategories.remove(sanitizeString(category));
     }
 
     private static String sanitizeString(String stringToSanitize) {

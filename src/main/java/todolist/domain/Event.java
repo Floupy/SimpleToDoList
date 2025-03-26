@@ -37,6 +37,18 @@ public class Event {
         return isComplete;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public void completeEvent() {
         isComplete = true;
     }
